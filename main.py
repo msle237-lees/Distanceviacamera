@@ -1,31 +1,17 @@
-import numpy as np
 import cv2
+import matplotlib
+import numpy as np
 
-cap = cv2.VideoCapture(0)
+# cap = cv2.VideoCapture(0)
 
 cx_data = []
 cy_data = []
 Z = 76.2
 
-def fpointcal(cx_data, cy_data):
-    fx = ((sum(cx_data) / len(cx_data)) * Z) / (8.26)
-    fy = ((sum(cy_data) / len(cy_data)) * Z) / (13.97)
+def testScenarios():
+    return cap
 
-    print(fx)
-    print(fy)
-
-    return fx, fy
-
-def distance(fx, fy, cx_data, cy_data, object_dim_x, object_dim_y):
-    Zx = (cx_data / object_dim_x) * fx
-    Zy = (cy_data / object_dim_y) * fy
-
-    print(Zx)
-    print(Zy)
-
-    return Zx, Zy
-
-while(True):
+def contourfinding(cap):
     ret, frame = cap.read()
 
     buf1 = cv2.flip(frame, 1)
@@ -47,6 +33,30 @@ while(True):
         cx_data.append(cx)
         cy_data.append(cy)
     cv2.imshow('buf5', buf5)
+
+def fpointcal(cx_data, cy_data):
+    fx = ((sum(cx_data) / len(cx_data)) * Z) / (8.26)
+    fy = ((sum(cy_data) / len(cy_data)) * Z) / (13.97)
+
+    print(fx)
+    print(fy)
+
+    return fx, fy
+
+def distance(fx, fy, cx_data, cy_data, object_dim_x, object_dim_y):
+    Zx = (cx_data / object_dim_x) * fx
+    Zy = (cy_data / object_dim_y) * fy
+
+    print(Zx)
+    print(Zy)
+
+    return Zx, Zy
+
+while(True):
+    testScenarios()
+    contourfinding(cap)
+    fpointcal(cx_data, cy_data)
+    distance(fx, fy, cx_data, cy_data, object_dim_x, object_dim_y)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         fpointcal(cx_data, cy_data)
